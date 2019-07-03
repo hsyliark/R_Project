@@ -1,4 +1,4 @@
-setwd("D:/Workplace/R_Project/project2_naver_movie")
+setwd("D:/Workplace/R_Project/project/project2_naver_movie/crawling")
 
 library(rvest)
 library(dplyr)

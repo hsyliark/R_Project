@@ -1,4 +1,4 @@
-setwd("D:/Workplace/R_Project/project3_daum_ranking")
+setwd("D:/Workplace/R_Project/project/project3_daum_ranking/crawling")
 
 library(rvest)
 library(dplyr)
