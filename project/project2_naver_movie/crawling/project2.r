@@ -8,7 +8,6 @@ library(abind)
 
 
 
-
 ### 영화 '기생충' 평점, 리뷰
 
 
@@ -23,12 +22,21 @@ html <- read_html(url)
 url2 <- html %>% html_node('iframe.ifr') %>% html_attr('src')
 url_add <- "&page=" 
 url_ifr <- paste0(base_url,url2,url_add)
-pages <- 1:2918
 
+ems_html <- read_html(url_ifr)
+ems <- ems_html %>%
+  html_node("div.score_total") %>%
+  html_nodes("em") %>%
+  html_text()
+ems <- as.numeric(gsub(",","",ems[2]))
+pages <- 1:ceiling(ems/10)
 
 naver_movie <- data.frame(score=c(),review=c(),writer=c(),time=c())
 
 for (n in 1:length(pages)) {
+  
+  if (n %% 50 == 0)
+    print(n)
   
   url_pages <- paste0(url_ifr,pages[n])
   html2 <- read_html(url_pages)  
