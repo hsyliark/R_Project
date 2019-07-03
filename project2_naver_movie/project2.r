@@ -63,3 +63,5 @@ for (n in 1:length(pages)) {
 }
 
 View(naver_movie)
+
+write.csv(naver_movie,"naver_movie.csv")

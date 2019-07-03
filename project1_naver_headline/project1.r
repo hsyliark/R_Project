@@ -24,7 +24,7 @@ for (i in 1:length(categories)) {
   category <- c(category,rep(categories[i],20))
 }
 
-naver_headline <- data.frame(titles=c(), writing=c(), articles=c())
+naver_headline <- data.frame(title=c(), writer=c(), article=c())
 
 for (i in 1:length(number)) {
   
@@ -46,14 +46,14 @@ for (i in 1:length(number)) {
     html_text() %>%
     trim()
   lis2 <- ifelse(lis2 %in% c("","동영상기사"),"",lis2)
-  lis.titles <- c(lis1,lis2)
-  titles <- c()
-  for (i in 1:length(lis.titles)) {
-    if (lis.titles[i] %in% c("","동영상기사")) {
-      titles <- titles }
+  lis.title <- c(lis1,lis2)
+  title <- c()
+  for (i in 1:length(lis.title)) {
+    if (lis.title[i] %in% c("","동영상기사")) {
+      title <- title }
     else {
-      a <- gsub('\\"',"",lis.titles[i])
-      titles <- c(titles,a)
+      a <- gsub('\\"',"",lis.title[i])
+      title <- c(title,a)
     }
   }
   
@@ -68,7 +68,7 @@ for (i in 1:length(number)) {
     html_node('.type06') %>%
     html_nodes('.writing') %>%
     html_text() 
-  writing <- c(lis3,lis4)
+  writer <- c(lis3,lis4)
   
   # 기사
   lis5 <- html %>%
@@ -85,18 +85,18 @@ for (i in 1:length(number)) {
     html_text() %>%
     trim()
   lis6 <- ifelse(lis6 %in% c("","동영상기사"),"",lis6)
-  lis.articles <- c(lis5,lis6)
-  articles <- c()
-  for (i in 1:length(lis.articles)) {
-    if (lis.articles[i] %in% c("","동영상기사")) {
-      articles <- articles }
+  lis.article <- c(lis5,lis6)
+  article <- c()
+  for (i in 1:length(lis.article)) {
+    if (lis.article[i] %in% c("","동영상기사")) {
+      article <- article }
     else {
-      a <- gsub('\\"',"",lis.articles[i])
-      articles <- c(articles,a)
+      a <- gsub('\\"',"",lis.article[i])
+      article <- c(article,a)
     }
   }
   
-  headline <- data.frame(titles=titles, writing=writing, articles=articles)
+  headline <- data.frame(title=title, writer=writer, article=article)
   naver_headline <- rbind.data.frame(naver_headline, headline)
   
 #  addWorksheet(wb, categories[i])
@@ -109,6 +109,8 @@ for (i in 1:length(number)) {
 naver_headline <- cbind.data.frame(category,naver_headline)
 
 View(naver_headline)
+
+write.csv(naver_headline,"naver_headline.csv")
 
 
 
