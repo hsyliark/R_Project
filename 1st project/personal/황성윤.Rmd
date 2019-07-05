@@ -140,7 +140,7 @@ ggplot(data_movie1,aes(x=date,y=average,fill=date)) +
         axis.title.x = element_text(color="red",size=13,face="bold"),
         axis.title.y = element_text(color="blue",size=13,face="bold"))
 ```
-barplot을 통해서 보면 2019년 7월 5일을 제외한 일자별 네티즌 평균평점은 모두 8점 이상이다. 만점이 10점 이상이므로 대체적으로 네티즌들이 영화 '기생충'에 대해 후한 점수를 주고 있는 것으로 풀이된다. 이 데이터를 추출한 시점이 2019년 7월 5일 오전 9시 반이기 때문에 아직 7월 5일에 대한 평점은 업데이트가 잘 안 된 것으로 보인다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
+<br> barplot을 통해서 보면 2019년 7월 5일을 제외한 일자별 네티즌 평균평점은 모두 7.5점 이상이다. 만점이 10점이므로 대체적으로 네티즌들이 영화 '기생충'에 대해 후한 점수를 주고 있는 것으로 풀이된다. 이 데이터를 추출한 시점이 2019년 7월 5일 오전 9시 반이기 때문에 아직 7월 5일에 대한 평점은 업데이트가 잘 안 된 것으로 보인다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
 ```{r}
 require(dplyr)
 data_movie1_1 <- data_movie1 %>%
@@ -187,7 +187,7 @@ g4 <- ggplot(data_movie1_4,aes(x=date,y=average,fill=date)) +
         axis.title.y = element_text(color="blue",size=11,face="bold"))
 grid.arrange(g1,g2,g3,g4,nrow=2,ncol=2)
 ```
-다음으로는 시간대별 평균평점을 보도록 한다. <br>
+<br> 다음으로는 시간대별 평균평점을 보도록 한다. <br>
 ```{r}
 # line graph of data_movie2
 require(ggplot2)
@@ -199,7 +199,7 @@ ggplot(data_movie2,aes(x=hour,y=average)) +
         axis.title.x = element_text(color="red",size=13,face="bold"),
         axis.title.y = element_text(color="blue",size=13,face="bold"))
 ```
-line graph를 통해서 보면 전 시간대 모두 평균평점 8 이상의 높은 점수를 기록하고 있다. 다만, 오전 6시에서 8시 사이에 가장 낮은 평점을 기록하고 있다는 것은 아무래도 대부분의 사람들이 기상 후 출근하는 시간대이므로 영화평가 참여율이 약간 저조한 것이 원인으로 보인다. <br>
+<br> line graph를 통해서 보면 전 시간대 모두 평균평점 8 이상의 높은 점수를 기록하고 있다. 다만, 오전 6시에서 8시 사이에 가장 낮은 평점을 기록하고 있다는 것은 아무래도 대부분의 사람들이 기상 후 출근하는 시간대이므로 영화평가 참여율이 약간 저조한 것이 원인으로 보인다. <br>
 다음으로는 일자별로 각 시간대마다 평균평점이 어떻게 변하는지 살펴보도록 한다. <br>
 ```{r}
 # 일자별, 시간대별 평균평점 데이터
@@ -220,7 +220,7 @@ ggplot(data_movie3,aes(x=hour,y=average,colour=date)) +
         axis.title.x = element_text(color="red",size=13,face="bold"),
         axis.title.y = element_text(color="blue",size=13,face="bold"))
 ```
-모든 날짜에 대한 시간대별 평균평점에 대한 line graph를 한번에 그려봤다. 가끔씩 낮은 평점이 나오는 경우도 있지만 대체적으로 많은 네티즌들이 좋은 평점을 주고 있는 것으로 보여진다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
+<br> 모든 날짜에 대한 시간대별 평균평점에 대한 line graph를 한번에 그려봤다. 가끔씩 낮은 평점이 나오는 경우도 있지만 대체적으로 많은 네티즌들이 좋은 평점을 주고 있는 것으로 보여진다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
 ```{r}
 require(dplyr)
 data_movie3_1 <- data_movie3 %>%
@@ -268,7 +268,7 @@ p4 <- ggplot(data_movie3_4,aes(x=hour,y=average,colour=date)) +
 grid.arrange(p1,p2,p3,p4,nrow=2,ncol=2)
 ```
 
-그렇다면, 과연 일자별, 시간대별로 네티즌 평균평점이 차이가 있다고 할 수 있는지 통계분석을 실시해보도록 하겠다. 여기에서는 검증하고자 하는 요소가 일자별(date), 시간대별(hour) 이렇게 2가지이므로 일원배치법(one-way ANOVA test)과 이원배치법(two-way ANOVA test)을 적용한다. <br>
+<br> 그렇다면, 과연 일자별, 시간대별로 네티즌 평균평점이 차이가 있다고 할 수 있는지 통계분석을 실시해보도록 하겠다. 여기에서는 검증하고자 하는 요소가 일자별(date), 시간대별(hour) 이렇게 2가지이므로 일원배치법(one-way ANOVA test)과 이원배치법(two-way ANOVA test)을 적용한다. <br>
 
 
 #### 2) statistical analysis
@@ -428,6 +428,6 @@ par(oma=rep(0,4))
 wordcloud(names(wordcount),freq=wordcount,scale=c(10,1),rot.per=0.25,min.freq=2,
           random.order=F,random.color=T,colors=palete)
 ```
-wordcloud의 결과를 보면 대체적으로 생각, 여운, 현실, 소름 등의 느낌과 관련한 단어와 역대, 진짜 등의 평가와 관련한 단어가 많이 추출됨을 확인할 수 있다. 하지만 결말을 통해 뭔가 충격적이고 씁쓸하다고 생각하는 네티즌들도 많아보인다. 아무래도 국제적으로 인정받는 상을 수상한 영화이니 만큼 대단하다는 평가가 절대적이라고 보여진다.    
+<br> wordcloud의 결과를 보면 대체적으로 생각, 여운, 현실, 소름 등의 느낌과 관련한 단어와 역대, 진짜 등의 평가와 관련한 단어가 많이 추출됨을 확인할 수 있다. 하지만 결말을 통해 뭔가 충격적이고 씁쓸하다고 생각하는 네티즌들도 많아보인다. 아무래도 국제적으로 인정받는 상을 수상한 영화이니 만큼 대단하다는 평가가 절대적이라고 보여진다.    
 
 
