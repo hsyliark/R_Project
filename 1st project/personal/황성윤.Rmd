@@ -136,9 +136,9 @@ ggplot(data_movie1,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점") +
-  theme(plot.title = element_text(color="black",size=18,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=13,face="bold"),
-        axis.title.y = element_text(color="blue",size=13,face="bold"))
+  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=10,face="bold"),
+        axis.title.y = element_text(color="blue",size=10,face="bold"))
 ```
 <br> barplot을 통해서 보면 2019년 7월 5일을 제외한 일자별 네티즌 평균평점은 모두 7.5점 이상이다. 만점이 10점이므로 대체적으로 네티즌들이 영화 '기생충'에 대해 후한 점수를 주고 있는 것으로 풀이된다. 이 데이터를 추출한 시점이 2019년 7월 5일 오전 9시 반이기 때문에 아직 7월 5일에 대한 평점은 업데이트가 잘 안 된 것으로 보인다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
 ```{r}
@@ -161,30 +161,30 @@ g1 <- ggplot(data_movie1_1,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 1") +
-  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=11,face="bold"),
-        axis.title.y = element_text(color="blue",size=11,face="bold"))
+  theme(plot.title = element_text(color="black",size=12,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=9,face="bold"),
+        axis.title.y = element_text(color="blue",size=9,face="bold"))
 g2 <- ggplot(data_movie1_2,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 2") +
-  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=11,face="bold"),
-        axis.title.y = element_text(color="blue",size=11,face="bold"))
+  theme(plot.title = element_text(color="black",size=12,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=9,face="bold"),
+        axis.title.y = element_text(color="blue",size=9,face="bold"))
 g3 <- ggplot(data_movie1_3,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 3") +
-  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=11,face="bold"),
-        axis.title.y = element_text(color="blue",size=11,face="bold"))
+  theme(plot.title = element_text(color="black",size=12,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=9,face="bold"),
+        axis.title.y = element_text(color="blue",size=9,face="bold"))
 g4 <- ggplot(data_movie1_4,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 4") +
-  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=11,face="bold"),
-        axis.title.y = element_text(color="blue",size=11,face="bold"))
+  theme(plot.title = element_text(color="black",size=12,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=9,face="bold"),
+        axis.title.y = element_text(color="blue",size=9,face="bold"))
 grid.arrange(g1,g2,g3,g4,nrow=2,ncol=2)
 ```
 <br> 다음으로는 시간대별 평균평점을 보도록 한다. <br>
@@ -195,9 +195,9 @@ ggplot(data_movie2,aes(x=hour,y=average)) +
   geom_line(size=2) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 시간대별 네티즌 평균평점") +
-  theme(plot.title = element_text(color="black",size=18,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=13,face="bold"),
-        axis.title.y = element_text(color="blue",size=13,face="bold"))
+  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=10,face="bold"),
+        axis.title.y = element_text(color="blue",size=10,face="bold"))
 ```
 <br> line graph를 통해서 보면 전 시간대 모두 평균평점 8 이상의 높은 점수를 기록하고 있다. 다만, 오전 6시에서 8시 사이에 가장 낮은 평점을 기록하고 있다는 것은 아무래도 대부분의 사람들이 기상 후 출근하는 시간대이므로 영화평가 참여율이 약간 저조한 것이 원인으로 보인다. <br>
 다음으로는 일자별로 각 시간대마다 평균평점이 어떻게 변하는지 살펴보도록 한다. <br>
@@ -216,9 +216,9 @@ ggplot(data_movie3,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점") +
-  theme(plot.title = element_text(color="black",size=18,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=13,face="bold"),
-        axis.title.y = element_text(color="blue",size=13,face="bold"))
+  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=10,face="bold"),
+        axis.title.y = element_text(color="blue",size=10,face="bold"))
 ```
 <br> 모든 날짜에 대한 시간대별 평균평점에 대한 line graph를 한번에 그려봤다. 가끔씩 낮은 평점이 나오는 경우도 있지만 대체적으로 많은 네티즌들이 좋은 평점을 주고 있는 것으로 보여진다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
 ```{r}
@@ -241,30 +241,30 @@ p1 <- ggplot(data_movie3_1,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점 1") +
-  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=11,face="bold"),
-        axis.title.y = element_text(color="blue",size=11,face="bold"))
+  theme(plot.title = element_text(color="black",size=12,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=9,face="bold"),
+        axis.title.y = element_text(color="blue",size=9,face="bold"))
 p2 <- ggplot(data_movie3_2,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점 2") +
-  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=11,face="bold"),
-        axis.title.y = element_text(color="blue",size=11,face="bold"))
+  theme(plot.title = element_text(color="black",size=12,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=9,face="bold"),
+        axis.title.y = element_text(color="blue",size=9,face="bold"))
 p3 <- ggplot(data_movie3_3,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점 3") +
-  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=11,face="bold"),
-        axis.title.y = element_text(color="blue",size=11,face="bold"))
+  theme(plot.title = element_text(color="black",size=12,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=9,face="bold"),
+        axis.title.y = element_text(color="blue",size=9,face="bold"))
 p4 <- ggplot(data_movie3_4,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점 4") +
-  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=11,face="bold"),
-        axis.title.y = element_text(color="blue",size=11,face="bold"))
+  theme(plot.title = element_text(color="black",size=12,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=9,face="bold"),
+        axis.title.y = element_text(color="blue",size=9,face="bold"))
 grid.arrange(p1,p2,p3,p4,nrow=2,ncol=2)
 ```
 
@@ -276,7 +276,7 @@ grid.arrange(p1,p2,p3,p4,nrow=2,ncol=2)
 ```{r}
 qqnorm(naver_movie$score) ; qqline(naver_movie$score)  
 ```
-그래프를 살펴본 결과, 산점도의 분포가 직선 주변에 고르게 분포되어 있지는 않아보인다. 또한, 일자별, 시간대별로 나누어서 그래프를 그린다고 하더라도 이와 비슷한 결과를 주지 않을까 생각한다. 따라서, 네티즌 평점은 정규성을 벗어난 것으로 결론을 내리고, 이에 따라 모집단의 분포와 무관한 순위(rank)와 부호(sign)를 사용하여 결과를 도출하는 비모수적 검정(nonparametric test)을 사용하도록 한다. 모수적 검정인 일원배치법과 이원배치법에 상응하는 비모수적 검정에는 각각 Kruskal-Wallis Test와 Friedman Test가 있다. 다만, Friedman Test의 경우는 변수, group, 그리고 block의 개수가 동일한 경우에 한해 검정이 가능하기 때문에 네티즌 평점 데이터에는 적용할 수 없으므로 생략한다. 그리고 추가적으로 정규성을 만족한다는 가정 하에 모수적 검정(parametric test)도 실시해보겠다. 순서는 다음과 같이 실시한다. 단, 유의수준은 0.05로 한다. <br>
+<br> 그래프를 살펴본 결과, 산점도의 분포가 직선 주변에 고르게 분포되어 있지는 않아보인다. 또한, 일자별, 시간대별로 나누어서 그래프를 그린다고 하더라도 이와 비슷한 결과를 주지 않을까 생각한다. 따라서, 네티즌 평점은 정규성을 벗어난 것으로 결론을 내리고, 이에 따라 모집단의 분포와 무관한 순위(rank)와 부호(sign)를 사용하여 결과를 도출하는 비모수적 검정(nonparametric test)을 사용하도록 한다. 모수적 검정인 일원배치법과 이원배치법에 상응하는 비모수적 검정에는 각각 Kruskal-Wallis Test와 Friedman Test가 있다. 다만, Friedman Test의 경우는 변수, group, 그리고 block의 개수가 동일한 경우에 한해 검정이 가능하기 때문에 네티즌 평점 데이터에는 적용할 수 없으므로 생략한다. 그리고 추가적으로 정규성을 만족한다는 가정 하에 모수적 검정(parametric test)도 실시해보겠다. 순서는 다음과 같이 실시한다. 단, 유의수준은 0.05로 한다. <br>
 
 One-way ANOVA -> Kruskal_Wallis -> Two-way ANOVA <br> 
 
@@ -284,9 +284,9 @@ One-way ANOVA -> Kruskal_Wallis -> Two-way ANOVA <br>
 A -> 일자(date)별 효과 / B -> 시간대(hour)별 효과 <br>
 
 
-##### 1)) One-way ANOVA
+#### 1)) One-way ANOVA
 
-###### 1. 일자별(date)
+#### 1. 일자별(date)
 모형식 : Yij == MU + Ai + Eij, <br>
 i=1,...,a / j=1,...,n / Eij ~ i.i.d N(0,sigma^2) <br>
 우선, 등분산성 검정을 Bartlett test를 이용하여 실시해본다. <br>
@@ -307,7 +307,7 @@ ph1 <- TukeyHSD(out1)
 plot(ph1)
 ```
 
-###### 2. 시간대별(hour)
+#### 2. 시간대별(hour)
 모형식 : Yij == MU + Bi + Eij, <br>
 i=1,...,b / j=1,...,n / Eij ~ i.i.d N(0,sigma^2) <br>
 우선, 등분산성 검정을 Bartlett test를 이용하여 실시해본다. <br>
@@ -330,10 +330,10 @@ plot(ph2)
 ```
 
 
-##### 2)) Kruskal-Wallis test
+#### 2)) Kruskal-Wallis test
 이 검정법은 일원배치법에 상응하는 비모수적 검정법이다. 이를 이용해 일자별로, 시간대별로 네티즌 평점이 다른지 검정한다. <br>
 
-###### 1. 일자별(date)
+#### 1. 일자별(date)
 Hypothesis1 <br>
 H0 : 일자별 네티즌 평점은 동일하다. v.s H1 : not H0
 ```{r}
@@ -341,7 +341,7 @@ kruskal.test(score~date,data=naver_movie)
 ```
 검정결과 p-value의 값이 유의수준 0.05보다 매우 작다. 따라서 귀무가설을 기각하게 되고 이에 따라 일자별 네티즌 평점은 차이가 있다고 결론내린다. <br>
 
-###### 2. 시간대별(hour)
+#### 2. 시간대별(hour)
 Hypothesis2 <br>
 H0 : 시간대별 네티즌 평점은 동일하다. v.s H1 : not H0
 ```{r}
@@ -349,7 +349,7 @@ kruskal.test(score~hour,data=naver_movie)
 ```
 검정결과 p-value의 값이 유의수준 0.05보다 매우 작다. 따라서 귀무가설을 기각하게 되고 이에 따라 시간대별 네티즌 평점은 차이가 있다고 결론내린다. <br>
 
-###### 3. 일자와 시간대의 교호작용(interaction effect)
+#### 3. 일자와 시간대의 교호작용(interaction effect)
 Hypothesis3 <br>
 H0 : 교호작용에 따른 네티즌 평점은 동일하다. v.s H1 : not H0 <br>
 여기에서 변수 dh는 두가지 변수 date와 hour의 교호작용과 관련한 변수로서 엑셀을 이용해서 만들었다.
@@ -359,8 +359,7 @@ kruskal.test(score~dh,data=naver_movie)
 검정결과 p-value의 값이 유의수준 0.05보다 매우 작다. 따라서 귀무가설을 기각하게 되고 이에 따라 일자와 시간대의 교호작용에 따른 네티즌 평점은 차이가 있다고 결론내린다. <br>
 
 
-##### 3)) Two-way ANOVA
-
+#### 3)) Two-way ANOVA
 분석을 실시하기 전, 해당하는 이원배치법 모형식(model equation)을 살펴보면 다음과 같다. <br>
 Yijk == MU + Ai + Bj + ABij + Eijk, sum(Ai)==0, sum(Bj)==0, sum(ABij)==0, <br>
 i=1,...,a / j=1,...,b / k=1,...,n / Eijk ~ i.i.d N(0,sigma^2) <br>
@@ -419,13 +418,13 @@ words <- Filter(function(x) {nchar(x)>=2 & nchar(x)<=5}, words)
 wordcount <- table(words)
 head(sort(wordcount,decreasing=T),50)
 ```
-결과를 살펴보면, 어느정도 걸러질 문자나 어구는 대부분 사라진 것으로 보인다. 이 결과를 바탕으로 wordcount table을 생성하도록 하고, 이를 통해 결과를 정리하면 다음과 같다. 
+<br> 결과를 살펴보면, 어느정도 걸러질 문자나 어구는 대부분 사라진 것으로 보인다. 이 결과를 바탕으로 wordcount table을 생성하도록 하고, 이를 통해 결과를 정리하면 다음과 같다. 그전에 사용빈도수가 30 이하인 단어는 wordcloud 생성 시 나타나지 않을 수 있고, 이유없이 다른 사람을 비하하는 비속어나 정치적인 내용 등이 담겨있는 중요하지 않은 어구이므로 제외시키도록 한다. 
 ```{r}
 require(RColorBrewer)
 palete <- brewer.pal(12,"Paired")
 require(wordcloud)
-par(oma=rep(0,4))
-wordcloud(names(wordcount),freq=wordcount,scale=c(10,1),rot.per=0.25,min.freq=2,
+par(mai=rep(0,4))
+wordcloud(names(wordcount),freq=wordcount,scale=c(7,0.45),rot.per=0.25,min.freq=31,
           random.order=F,random.color=T,colors=palete)
 ```
 <br> wordcloud의 결과를 보면 대체적으로 생각, 여운, 현실, 소름 등의 느낌과 관련한 단어와 역대, 진짜 등의 평가와 관련한 단어가 많이 추출됨을 확인할 수 있다. 하지만 결말을 통해 뭔가 충격적이고 씁쓸하다고 생각하는 네티즌들도 많아보인다. 아무래도 국제적으로 인정받는 상을 수상한 영화이니 만큼 대단하다는 평가가 절대적이라고 보여진다.    
