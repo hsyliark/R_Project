@@ -1,0 +1,433 @@
+---
+title: "영화 '기생충' 관련 네티즌 반응 분석"
+author: "황 성 윤"
+date: '2019 7 5 '
+output: html_document
+---
+
+
+
+## data crawling
+
+다음 사이트에 접속하면 최근 칸 국제영화제에서 황금종려상을 수상한 데 이어 시드니영화제에서도 최고상인 시드니 필름 프라이즈까지 거머쥔 봉준호 감독의 영화 '기생충'에 대한 줄거리와 배우 및 제작진 등 다양한 정보를 확인할 수 있다. <br>
+site : https://movie.naver.com/movie/bi/mi/basic.nhn?code=161967 <br>
+우선, '기생충'을 관람한 네티즌들의 평가와 평점, 아이디, 그리고 업로드 시각이 포함된 데이터를 수집하고 전처리를 하기 위한 크롤링을 실시하도록 한다. 데이터의 양이 워낙 방대하기 때문에 크롤링에 약 15분 정도가 소요될 것으로 보이며, 크롤링을 위한 패키지 'rvest'를 사용한다. <br>
+
+### 데이터 crawling 준비
+```{r}
+# 영화 '기생충' 관련 데이터 crawling
+
+## 필요 패키지 설치
+library(rvest)
+library(dplyr)
+library(stringr)
+library(openxlsx)
+library(abind)
+
+trim <- function(x) gsub("^\\s+|\\s+$", "", x)
+
+base_url <- "https://movie.naver.com"
+url_sub <- "/movie/bi/mi/point.nhn?code=161967"
+url <- paste0(base_url,url_sub)
+
+html <- read_html(url)
+
+## 네티즌 평가, 평점 관련 url 추출
+url2 <- html %>% html_node('iframe.ifr') %>% html_attr('src')
+url_add <- "&page=" 
+url_ifr <- paste0(base_url,url2,url_add) 
+
+## 실시간 댓글 건수
+ems_html <- read_html(url_ifr)
+ems <- ems_html %>%
+  html_node("div.score_total") %>%
+  html_nodes("em") %>%
+  html_text()
+ems <- as.numeric(gsub(",","",ems[2]))
+pages <- 1:ceiling(ems/10) 
+```
+
+### 네티즌 반응 데이터 생성 
+```{r}
+naver_movie <- data.frame(score=c(),review=c(),writer=c(),time=c())
+
+# date crawling (작동여부를 확인하기 위해 100번 돌아갈 때마다 횟수를 표시)
+for (n in 1:length(pages)) {
+  
+  if (n %% 100 == 0)
+    print(n)
+  
+  url_pages <- paste0(url_ifr,pages[n])
+  html2 <- read_html(url_pages)  
+  
+  lis <- html2 %>% html_node('div.score_result') %>% html_nodes('li') 
+  
+  score <- c()
+  review <- c()
+  writer <- c()
+  time <- c()
+  
+  for (li in lis) {
+    # score
+    score <- c(score,html_node(li,'.star_score') %>% html_text('em') %>% trim()) 
+    # review
+    tmp <- li %>% html_node('.score_reple') %>% html_text('p') %>% trim()
+    idx <- str_locate(tmp,'\r')
+    review <- c(review,str_sub(tmp,1,idx[1]-1))
+    # writer
+    tmp <- trim(str_sub(tmp,idx[1],-1))
+    idx <- str_locate(tmp,'\r')
+    writer <- c(writer,str_sub(tmp,1,idx[1]-1))
+    # time
+    tmp <- trim(str_sub(tmp,idx[1],-1))
+    idx <- str_locate(tmp,'\r')
+    time <- c(time,str_sub(tmp,1,idx[1]-1))
+  }
+  
+  movie <- data.frame(score=score,review=review,writer=writer,time=time)
+  naver_movie <- rbind.data.frame(naver_movie,movie)  
+
+}
+
+str(naver_movie)
+```
+추출된 데이터 naver_movie의 구조를 살펴본 결과 목적에 부합하는 데이터가 제대로 생성되었음을 확인할 수 있다. <br>
+
+
+
+## data analysis
+
+
+### 1. 일자별/시간대별 평점 분석
+
+먼저, 일자별, 시간대별로 평점을 분석하기 위해 생성된 데이터를 엑셀파일로 불러낸 다음 날짜와 시간대를 모두 포함한 변수 time을 분리하여 날짜변수 date, 시간대변수 hour를 추가로 생성한다. 단, 변수 hour에는 분(minute)과 관련한 수치는 포함하지 않는다. 시간대별로 분석하는 데 있어 분과 관련한 수치는 쓰지 않을 것이기 때문이다. <br>
+```{r}
+# 엑셀파일로 불러낸 데이터를 엑셀작업 후 R로 불러들임.
+naver_movie <- read.csv("D:/Workplace/R_Project/1st project/personal/naver_movie.csv",header=T)
+str(naver_movie)
+```
+불러들인 데이터의 구조를 확인한 결과 제대로 데이터가 들어왔음을 확인할 수 있다. <br>
+
+#### 1) graph
+먼저, 일자별로 평점을 분석하여 그래프를 그리고 결과를 확인해본다. <br>
+```{r}
+library(ggplot2)
+library(gridExtra)
+require(dplyr)
+data_movie <- naver_movie %>%
+  select(score,date,hour)
+# 일자별 평균평점 데이터
+data_movie1 <- data_movie %>%
+  group_by(date) %>%
+  summarise(average=mean(score,na.rm=T))
+data_movie1
+# 시간대별 평균평점 데이터
+data_movie2 <- data_movie %>%
+  group_by(hour) %>%
+  summarise(average=mean(score,na.rm=T))
+data_movie2
+```
+이제 전처리된 데이터를 이용하여 몇가지 그래프를 그려보도록 한다. <br>
+우선 일자별 평균평점을 보도록 한다. <br>
+```{r}
+# barplot of data_movie1
+require(ggplot2)
+ggplot(data_movie1,aes(x=date,y=average,fill=date)) +
+  geom_bar(stat="identity") +
+  xlab("날짜") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점") +
+  theme(plot.title = element_text(color="black",size=18,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=13,face="bold"),
+        axis.title.y = element_text(color="blue",size=13,face="bold"))
+```
+barplot을 통해서 보면 2019년 7월 5일을 제외한 일자별 네티즌 평균평점은 모두 8점 이상이다. 만점이 10점 이상이므로 대체적으로 네티즌들이 영화 '기생충'에 대해 후한 점수를 주고 있는 것으로 풀이된다. 이 데이터를 추출한 시점이 2019년 7월 5일 오전 9시 반이기 때문에 아직 7월 5일에 대한 평점은 업데이트가 잘 안 된 것으로 보인다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
+```{r}
+require(dplyr)
+data_movie1_1 <- data_movie1 %>%
+  filter(date %in% c('2019.05.30','2019.05.31','2019.06.01','2019.06.02','2019.06.03',
+                     '2019.06.04','2019.06.05','2019.06.06','2019.06.07'))
+data_movie1_2 <- data_movie1 %>%
+  filter(date %in% c('2019.06.08','2019.06.09','2019.06.10','2019.06.11','2019.06.12',
+                     '2019.06.13','2019.06.14','2019.06.15','2019.06.16'))
+data_movie1_3 <- data_movie1 %>%
+  filter(date %in% c('2019.06.17','2019.06.18','2019.06.19','2019.06.20','2019.06.21',
+                     '2019.06.22','2019.06.23','2019.06.24','2019.06.25'))
+data_movie1_4 <- data_movie1 %>%
+  filter(date %in% c('2019.06.26','2019.06.27','2019.06.28','2019.06.29','2019.06.30',
+                     '2019.07.01','2019.07.02','2019.07.03','2019.07.04','2019.07.05'))
+require(ggplot2)
+require(gridExtra)
+g1 <- ggplot(data_movie1_1,aes(x=date,y=average,fill=date)) +
+  geom_bar(stat="identity") +
+  xlab("날짜") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 1") +
+  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=11,face="bold"),
+        axis.title.y = element_text(color="blue",size=11,face="bold"))
+g2 <- ggplot(data_movie1_2,aes(x=date,y=average,fill=date)) +
+  geom_bar(stat="identity") +
+  xlab("날짜") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 2") +
+  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=11,face="bold"),
+        axis.title.y = element_text(color="blue",size=11,face="bold"))
+g3 <- ggplot(data_movie1_3,aes(x=date,y=average,fill=date)) +
+  geom_bar(stat="identity") +
+  xlab("날짜") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 3") +
+  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=11,face="bold"),
+        axis.title.y = element_text(color="blue",size=11,face="bold"))
+g4 <- ggplot(data_movie1_4,aes(x=date,y=average,fill=date)) +
+  geom_bar(stat="identity") +
+  xlab("날짜") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 4") +
+  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=11,face="bold"),
+        axis.title.y = element_text(color="blue",size=11,face="bold"))
+grid.arrange(g1,g2,g3,g4,nrow=2,ncol=2)
+```
+다음으로는 시간대별 평균평점을 보도록 한다. <br>
+```{r}
+# line graph of data_movie2
+require(ggplot2)
+ggplot(data_movie2,aes(x=hour,y=average)) +
+  geom_line(size=2) +
+  xlab("시간대") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 시간대별 네티즌 평균평점") +
+  theme(plot.title = element_text(color="black",size=18,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=13,face="bold"),
+        axis.title.y = element_text(color="blue",size=13,face="bold"))
+```
+line graph를 통해서 보면 전 시간대 모두 평균평점 8 이상의 높은 점수를 기록하고 있다. 다만, 오전 6시에서 8시 사이에 가장 낮은 평점을 기록하고 있다는 것은 아무래도 대부분의 사람들이 기상 후 출근하는 시간대이므로 영화평가 참여율이 약간 저조한 것이 원인으로 보인다. <br>
+다음으로는 일자별로 각 시간대마다 평균평점이 어떻게 변하는지 살펴보도록 한다. <br>
+```{r}
+# 일자별, 시간대별 평균평점 데이터
+data_movie3 <- data_movie %>%
+  group_by(date,hour) %>%
+  summarise(average=mean(score,na.rm=T))
+data_movie3
+```
+이제 생성된 데이터 data_movie3를 이용해 일자별 line graph를 그려보도록 한다. <br>
+```{r}
+# line graph of data_movie3
+require(ggplot2)
+ggplot(data_movie3,aes(x=hour,y=average,colour=date)) +
+  geom_line(size=1) +
+  xlab("시간대") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 네티즌 평균평점") +
+  theme(plot.title = element_text(color="black",size=18,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=13,face="bold"),
+        axis.title.y = element_text(color="blue",size=13,face="bold"))
+```
+모든 날짜에 대한 시간대별 평균평점에 대한 line graph를 한번에 그려봤다. 가끔씩 낮은 평점이 나오는 경우도 있지만 대체적으로 많은 네티즌들이 좋은 평점을 주고 있는 것으로 보여진다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
+```{r}
+require(dplyr)
+data_movie3_1 <- data_movie3 %>%
+  filter(date %in% c('2019.05.30','2019.05.31','2019.06.01','2019.06.02','2019.06.03',
+                     '2019.06.04','2019.06.05','2019.06.06','2019.06.07'))
+data_movie3_2 <- data_movie3 %>%
+  filter(date %in% c('2019.06.08','2019.06.09','2019.06.10','2019.06.11','2019.06.12',
+                     '2019.06.13','2019.06.14','2019.06.15','2019.06.16'))
+data_movie3_3 <- data_movie3 %>%
+  filter(date %in% c('2019.06.17','2019.06.18','2019.06.19','2019.06.20','2019.06.21',
+                     '2019.06.22','2019.06.23','2019.06.24','2019.06.25'))
+data_movie3_4 <- data_movie3 %>%
+  filter(date %in% c('2019.06.26','2019.06.27','2019.06.28','2019.06.29','2019.06.30',
+                     '2019.07.01','2019.07.02','2019.07.03','2019.07.04','2019.07.05'))
+require(ggplot2)
+require(gridExtra)
+p1 <- ggplot(data_movie3_1,aes(x=hour,y=average,colour=date)) +
+  geom_line(size=1) +
+  xlab("시간대") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 네티즌 평균평점 1") +
+  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=11,face="bold"),
+        axis.title.y = element_text(color="blue",size=11,face="bold"))
+p2 <- ggplot(data_movie3_2,aes(x=hour,y=average,colour=date)) +
+  geom_line(size=1) +
+  xlab("시간대") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 네티즌 평균평점 2") +
+  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=11,face="bold"),
+        axis.title.y = element_text(color="blue",size=11,face="bold"))
+p3 <- ggplot(data_movie3_3,aes(x=hour,y=average,colour=date)) +
+  geom_line(size=1) +
+  xlab("시간대") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 네티즌 평균평점 3") +
+  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=11,face="bold"),
+        axis.title.y = element_text(color="blue",size=11,face="bold"))
+p4 <- ggplot(data_movie3_4,aes(x=hour,y=average,colour=date)) +
+  geom_line(size=1) +
+  xlab("시간대") + ylab("평균 평점") +
+  ggtitle("영화 '기생충' 관련 네티즌 평균평점 4") +
+  theme(plot.title = element_text(color="black",size=13,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=11,face="bold"),
+        axis.title.y = element_text(color="blue",size=11,face="bold"))
+grid.arrange(p1,p2,p3,p4,nrow=2,ncol=2)
+```
+
+그렇다면, 과연 일자별, 시간대별로 네티즌 평균평점이 차이가 있다고 할 수 있는지 통계분석을 실시해보도록 하겠다. 여기에서는 검증하고자 하는 요소가 일자별(date), 시간대별(hour) 이렇게 2가지이므로 일원배치법(one-way ANOVA test)과 이원배치법(two-way ANOVA test)을 적용한다. <br>
+
+
+#### 2) statistical analysis
+분석을 실시하기 전, 네티즌 평점이 정규성을 띄는지 판단해보기 위해 Normal Q-Q Plot을 그려보도록 한다. 보통 Shapiro-Wilk test를 실시하여 정규성을 검정하게 되는데, 데이터의 크기가 3 이상 5000 이하의 경우에만 검정통계량이 유의하게 계산된다. 이에 따라 Normal Q-Q Plot을 그려서 정규성을 직관적으로 판단해보도록 하겠다. <br>
+```{r}
+qqnorm(naver_movie$score) ; qqline(naver_movie$score)  
+```
+그래프를 살펴본 결과, 산점도의 분포가 직선 주변에 고르게 분포되어 있지는 않아보인다. 또한, 일자별, 시간대별로 나누어서 그래프를 그린다고 하더라도 이와 비슷한 결과를 주지 않을까 생각한다. 따라서, 네티즌 평점은 정규성을 벗어난 것으로 결론을 내리고, 이에 따라 모집단의 분포와 무관한 순위(rank)와 부호(sign)를 사용하여 결과를 도출하는 비모수적 검정(nonparametric test)을 사용하도록 한다. 모수적 검정인 일원배치법과 이원배치법에 상응하는 비모수적 검정에는 각각 Kruskal-Wallis Test와 Friedman Test가 있다. 다만, Friedman Test의 경우는 변수, group, 그리고 block의 개수가 동일한 경우에 한해 검정이 가능하기 때문에 네티즌 평점 데이터에는 적용할 수 없으므로 생략한다. 그리고 추가적으로 정규성을 만족한다는 가정 하에 모수적 검정(parametric test)도 실시해보겠다. 순서는 다음과 같이 실시한다. 단, 유의수준은 0.05로 한다. <br>
+
+One-way ANOVA -> Kruskal_Wallis -> Two-way ANOVA <br> 
+
+
+A -> 일자(date)별 효과 / B -> 시간대(hour)별 효과 <br>
+
+
+##### 1)) One-way ANOVA
+
+###### 1. 일자별(date)
+모형식 : Yij == MU + Ai + Eij, <br>
+i=1,...,a / j=1,...,n / Eij ~ i.i.d N(0,sigma^2) <br>
+우선, 등분산성 검정을 Bartlett test를 이용하여 실시해본다. <br>
+```{r}
+bartlett.test(score~date,data=naver_movie)
+```
+검정결과 p-value의 값이 매우 작다. 따라서 등분산성을 만족하지 않는다는 결론이므로 일원배치법을 적용하기는 어렵지만 한번 실시해보겠다. <br>
+Hypothesis1 <br>
+H0 : 일자별 네티즌 평점은 동일하다. v.s H1 : not H0
+```{r}
+anova(lm(score~date,data=naver_movie))
+```
+검정결과 p-value의 값이 유의수준 0.05보다 매우 작다. 따라서 귀무가설을 기각하게 되고 이에 따라 일자별 네티즌 평점은 차이가 있다고 결론내린다. 이를 바탕으로 다음과 같이 Tukey 방법을 이용한 다중비교(multiple comparison)를 실시하면 다음과 같은 plot을 얻을 수 있고, 이를 통해 시각적으로 일자별 네티즌 평점의 차이를 확인해볼 수 있다. <br>
+```{r}
+res1 <- lm(score~date,data=naver_movie) 
+out1 <- aov(res1)
+ph1 <- TukeyHSD(out1)
+plot(ph1)
+```
+
+###### 2. 시간대별(hour)
+모형식 : Yij == MU + Bi + Eij, <br>
+i=1,...,b / j=1,...,n / Eij ~ i.i.d N(0,sigma^2) <br>
+우선, 등분산성 검정을 Bartlett test를 이용하여 실시해본다. <br>
+```{r}
+naver_movie$hour <- as.factor(naver_movie$hour)
+bartlett.test(score~hour,data=naver_movie)
+```
+검정결과 p-value의 값이 매우 작다. 따라서 등분산성을 만족하지 않는다는 결론이므로 일원배치법을 적용하기는 어렵지만 한번 실시해보겠다. <br>
+Hypothesis2 <br>
+H0 : 시간대별 네티즌 평점은 동일하다. v.s H1 : not H0
+```{r}
+anova(lm(score~hour,data=naver_movie))
+```
+검정결과 p-value의 값이 유의수준 0.05보다 매우 작다. 따라서 귀무가설을 기각하게 되고 이에 따라 시간대별 네티즌 평점은 차이가 있다고 결론내린다. 이를 바탕으로 다음과 같이 Tukey 방법을 이용한 다중비교(multiple comparison)를 실시하면 다음과 같은 plot을 얻을 수 있고, 이를 통해 시각적으로 일자별 네티즌 평점의 차이를 확인해볼 수 있다. <br>
+```{r}
+res2 <- lm(score~hour,data=naver_movie) 
+out2 <- aov(res2)
+ph2 <- TukeyHSD(out2)
+plot(ph2)
+```
+
+
+##### 2)) Kruskal-Wallis test
+이 검정법은 일원배치법에 상응하는 비모수적 검정법이다. 이를 이용해 일자별로, 시간대별로 네티즌 평점이 다른지 검정한다. <br>
+
+###### 1. 일자별(date)
+Hypothesis1 <br>
+H0 : 일자별 네티즌 평점은 동일하다. v.s H1 : not H0
+```{r}
+kruskal.test(score~date,data=naver_movie)
+```
+검정결과 p-value의 값이 유의수준 0.05보다 매우 작다. 따라서 귀무가설을 기각하게 되고 이에 따라 일자별 네티즌 평점은 차이가 있다고 결론내린다. <br>
+
+###### 2. 시간대별(hour)
+Hypothesis2 <br>
+H0 : 시간대별 네티즌 평점은 동일하다. v.s H1 : not H0
+```{r}
+kruskal.test(score~hour,data=naver_movie)
+```
+검정결과 p-value의 값이 유의수준 0.05보다 매우 작다. 따라서 귀무가설을 기각하게 되고 이에 따라 시간대별 네티즌 평점은 차이가 있다고 결론내린다. <br>
+
+###### 3. 일자와 시간대의 교호작용(interaction effect)
+Hypothesis3 <br>
+H0 : 교호작용에 따른 네티즌 평점은 동일하다. v.s H1 : not H0 <br>
+여기에서 변수 dh는 두가지 변수 date와 hour의 교호작용과 관련한 변수로서 엑셀을 이용해서 만들었다.
+```{r}
+kruskal.test(score~dh,data=naver_movie)
+```
+검정결과 p-value의 값이 유의수준 0.05보다 매우 작다. 따라서 귀무가설을 기각하게 되고 이에 따라 일자와 시간대의 교호작용에 따른 네티즌 평점은 차이가 있다고 결론내린다. <br>
+
+
+##### 3)) Two-way ANOVA
+
+분석을 실시하기 전, 해당하는 이원배치법 모형식(model equation)을 살펴보면 다음과 같다. <br>
+Yijk == MU + Ai + Bj + ABij + Eijk, sum(Ai)==0, sum(Bj)==0, sum(ABij)==0, <br>
+i=1,...,a / j=1,...,b / k=1,...,n / Eijk ~ i.i.d N(0,sigma^2) <br>
+여기에서, 날짜나 시간대 모두 기준이 고정되어 있는 변수이기 때문에 모두 무작위효과(random effect)가 아닌 고정효과(fixed effect)로 처리하였음을 밝힌다. <br>
+우선, 등분산성 검정을 Bartlett test를 통해 실시해보는 게 이상적이지만, 현재 이 네티즌 평점 데이터는 일자, 그리고 시간대별로 집단을 나누었을 때 관측치가 없거나 1개인 경우도 존재하기 때문에 검정통계량이 계산되지 않는다. 따라서 이 검정은 생략한다. 다만, One-way ANOVA를 실시했을 때 이미 일자별, 시간대별로 등분산성 가정이 만족하지 않았으므로 검정통계량이 계산된다 하더라도 결과는 등분산성 위배로 나올 가능성이 크다고 본다. 그러므로 이원배치법을 적용하기는 어렵지만 한번 실시해보겠다. <br>
+```{r}
+anova(lm(score~date*hour,data=naver_movie))
+```
+분산분석표를 통해서 봤을 때 모든 인자에 대한 p-value의 값이 매우 작게 나온다. 따라서 일자별, 시간대별, 그리고 일자와 시간대의 교호작용(interaction effect) 모두 유의미하며 이에 따른 네티즌 평점 역시 다르다고 볼 수 있다. <br>
+
+이 정도로 평점에 대한 분석은 마치기로 하고, 네티즌 댓글에 대한 자연어 처리 분석을 실시하도록 하겠다.
+
+
+### 2. 네티즌 댓글 NLP
+
+이제부터는 네티즌 댓글에 대한 NLP(Natural Language Processing)를 실시한다. 이를 위해 필요한 패키지를 먼저 설치하도록 한다.
+```{r}
+library(rJava)
+library(KoNLP)
+library(wordcloud)
+library(RColorBrewer)
+useSejongDic()
+```
+이제 원래 데이터 naver_movie에서 네티즌 댓글과 관련한 변수를 추출한다.
+```{r}
+require(dplyr)
+review <- naver_movie %>% select(review)
+write.table(review,"D:/Workplace/R_Project/1st project/personal/review.txt")
+```
+추출한 데이터에 대해 명사를 추출하고 필요없는 문자는 제거한다.
+```{r}
+require(stringr)
+review <- readLines("D:/Workplace/R_Project/1st project/personal/review.txt")
+review <- str_replace_all(review,"[A-z]","") # 모든 영문자 제거
+review <- str_replace_all(review,"\\d","") # 숫자 제거
+review <- str_replace_all(review,"[:punct:]","") # 특수문자 제거 
+words <- sapply(review,extractNoun,USE.NAMES=F) # 명사 추출
+head(unlist(words),100)
+```
+명사를 추출한 결과에서 크기가 2글자 이상 5글자 이하인 경우만 선택하더라도 큰 문제가 없을 것으로 판단된다. 따라서 이에 대한 처리작업을 실시하고, 추가적으로 필요없는 문구도 제거하도록 한다.
+```{r}
+words <- unlist(words)
+words <- gsub("^ㄷ","",words)
+words <- gsub("^ㄱ","",words)
+words <- gsub("^ㄴ","",words)
+words <- gsub("있었","",words)
+words <- gsub("하가","",words)
+words <- gsub("죽습니","죽다",words)
+words <- gsub("재밌","재밌다",words)
+words <- gsub("영화였습니","영화",words)
+words <- gsub("영화입니","영화",words)
+words <- gsub("박서준이","박서준",words)
+words <- gsub("봉준호는","봉준호",words)
+words <- gsub("봉감독","봉준호",words)
+words <- Filter(function(x) {nchar(x)>=2 & nchar(x)<=5}, words) 
+wordcount <- table(words)
+head(sort(wordcount,decreasing=T),50)
+```
+결과를 살펴보면, 어느정도 걸러질 문자나 어구는 대부분 사라진 것으로 보인다. 이 결과를 바탕으로 wordcount table을 생성하도록 하고, 이를 통해 결과를 정리하면 다음과 같다. 
+```{r}
+require(RColorBrewer)
+palete <- brewer.pal(12,"Paired")
+require(wordcloud)
+par(oma=rep(0,4))
+wordcloud(names(wordcount),freq=wordcount,scale=c(10,1),rot.per=0.25,min.freq=2,
+          random.order=F,random.color=T,colors=palete)
+```
+wordcloud의 결과를 보면 대체적으로 생각, 여운, 현실, 소름 등의 느낌과 관련한 단어와 역대, 진짜 등의 평가와 관련한 단어가 많이 추출됨을 확인할 수 있다. 하지만 결말을 통해 뭔가 충격적이고 씁쓸하다고 생각하는 네티즌들도 많아보인다. 아무래도 국제적으로 인정받는 상을 수상한 영화이니 만큼 대단하다는 평가가 절대적이라고 보여진다.    
+
+
