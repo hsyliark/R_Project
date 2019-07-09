@@ -1,5 +1,5 @@
-# pandoc document conversion failed with error 11 rmarkdown
-
+# Download pandoc 2.7.1 built with ghc-8.6.4, and instruct
+# RStudio + rmarkdown to use it.
 
 local({
   
@@ -39,3 +39,5 @@ local({
   writeLines("\nPlease restart RStudio for these changes to take effect.")
   
 })
+
+# 실행 후 종료, 다시 R 실행
