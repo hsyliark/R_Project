@@ -212,7 +212,7 @@ ggplot(data_movie2,aes(x=hour,y=average)) +
         axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(face="bold",color="darkgreen",size=10,angle=45),
         axis.text.y = element_text(face="bold",color="darkgreen",size=10,angle=45)) +
-  geom_text(aes(y=average,label=ylabel),color="darkgreen")
+  geom_text(aes(y=average,label=ylabel),color="darksalmon")
 ```
 <br> line graph를 통해서 보면 전 시간대 모두 평균평점 8 이상의 높은 점수를 기록하고 있다. 다만, 오전 6시에서 8시 사이에 가장 낮은 평점을 기록하고 있다는 것은 아무래도 대부분의 사람들이 기상 후 출근하는 시간대이므로 영화평가 참여율이 약간 저조한 것이 원인으로 보인다. <br>
 다음으로는 일자별로 각 시간대마다 평균평점이 어떻게 변하는지 살펴보도록 한다. <br>
@@ -415,6 +415,9 @@ kruskal.test(score~dh,data=naver_movie)
 Yijk == MU + Ai + Bj + ABij + Eijk, sum(Ai)==0, sum(Bj)==0, sum(ABij)==0, <br>
 i=1,...,a / j=1,...,b / k=1,...,n / Eijk ~ i.i.d N(0,sigma^2) <br>
 여기에서, 날짜나 시간대 모두 기준이 고정되어 있는 변수이기 때문에 모두 무작위효과(random effect)가 아닌 고정효과(fixed effect)로 처리하였음을 밝힌다. <br>
+실험계획법(experimental design), 혼합모형(mixed model)에서의 random effect, 그리고 fixed effect와 관련한 내용은 아래의 사이트와 pdf 파일을 참조하기 바란다. <br>
+site : http://conjugateprior.org/2013/01/formulae-in-r-anova/ <br>
+pdf : http://www.statpower.net/Content/311/Lecture%20Notes/RandomEffects.pdf <br>
 우선, 등분산성 검정을 Bartlett test를 통해 실시해보는 게 이상적이지만, 현재 이 네티즌 평점 데이터는 일자, 그리고 시간대별로 집단을 나누었을 때 관측치가 없거나 1개인 경우도 존재하기 때문에 검정통계량이 계산되지 않는다. 따라서 이 검정은 생략한다. 다만, One-way ANOVA를 실시했을 때 이미 일자별, 시간대별로 등분산성 가정이 만족하지 않았으므로 검정통계량이 계산된다 하더라도 결과는 등분산성 위배로 나올 가능성이 크다고 본다. 그러므로 이원배치법을 적용하기는 어렵지만 한번 실시해보겠다. <br>
 ```{r}
 anova(lm(score~date*hour,data=naver_movie))
