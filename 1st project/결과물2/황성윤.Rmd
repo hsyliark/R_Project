@@ -136,9 +136,9 @@ ggplot(data_movie1,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(angle=45))
 ```
 <br> barplot을 통해서 보면 2019년 7월 5일을 제외한 일자별 네티즌 평균평점은 모두 7.5점 이상이다. 만점이 10점이므로 대체적으로 네티즌들이 영화 '기생충'에 대해 후한 점수를 주고 있는 것으로 풀이된다. 이 데이터를 추출한 시점이 2019년 7월 5일 오전 9시 반이기 때문에 아직 7월 5일에 대한 평점은 업데이트가 잘 안 된 것으로 보인다. 좀 더 명확하게 살펴보기 위해 그래프를 나누어서 그려보면 다음과 같다. <br>
@@ -161,33 +161,33 @@ ggplot(data_movie1_1,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 1") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(angle=45))
 ggplot(data_movie1_2,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 2") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(angle=45))
 ggplot(data_movie1_3,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 3") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(angle=45))
 ggplot(data_movie1_4,aes(x=date,y=average,fill=date)) +
   geom_bar(stat="identity") +
   xlab("날짜") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 일자별 네티즌 평균평점 4") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(angle=45))
 ```
 <br> 다음으로는 시간대별 평균평점을 보도록 한다. <br>
@@ -198,9 +198,9 @@ ggplot(data_movie2,aes(x=hour,y=average)) +
   geom_line(size=2) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 시간대별 네티즌 평균평점") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(face="bold",color="darkgreen",size=10,angle=45),
         axis.text.y = element_text(face="bold",color="darkgreen",size=10,angle=45))
 ```
@@ -221,9 +221,9 @@ ggplot(data_movie3,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(face="bold",color="brown",size=10,angle=45),
         axis.text.y = element_text(face="bold",color="brown",size=10,angle=45))
 ```
@@ -247,40 +247,65 @@ ggplot(data_movie3_1,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점 1") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(face="bold",color="brown",size=10,angle=45),
         axis.text.y = element_text(face="bold",color="brown",size=10,angle=45))
 ggplot(data_movie3_2,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점 2") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(face="bold",color="brown",size=10,angle=45),
         axis.text.y = element_text(face="bold",color="brown",size=10,angle=45))
 ggplot(data_movie3_3,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점 3") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(face="bold",color="brown",size=10,angle=45),
         axis.text.y = element_text(face="bold",color="brown",size=10,angle=45))
 ggplot(data_movie3_4,aes(x=hour,y=average,colour=date)) +
   geom_line(size=1) +
   xlab("시간대") + ylab("평균 평점") +
   ggtitle("영화 '기생충' 관련 네티즌 평균평점 4") +
-  theme(plot.title = element_text(color="black",size=15,face="bold.italic",hjust=0.5),
-        axis.title.x = element_text(color="red",size=10,face="bold"),
-        axis.title.y = element_text(color="blue",size=10,face="bold"),
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
         axis.text.x = element_text(face="bold",color="brown",size=10,angle=45),
         axis.text.y = element_text(face="bold",color="brown",size=10,angle=45))
 ```
-<br> 그렇다면, 과연 일자별, 시간대별로 네티즌 평균평점이 차이가 있다고 할 수 있는지 통계분석을 실시해보도록 하겠다. 여기에서는 검증하고자 하는 요소가 일자별(date), 시간대별(hour) 이렇게 2가지이므로 일원배치법(one-way ANOVA test)과 이원배치법(two-way ANOVA test)을 적용한다. <br>
+<br> 마지막으로 평점 별 빈도수는 어떻게 되는지 확인해보겠다. <br>
+```{r}
+# 평점 별 빈도수 데이터
+data_movie_n <- data_movie
+data_movie_n$score <- as.factor(data_movie_n$score)
+data_movie4 <- data_movie_n %>%
+  group_by(score) %>%
+  summarise(count=n())
+data_movie4
+```
+이제 생성된 데이터 data_movie4를 이용해 평점 별 빈도수 관련 barplot를 그려보도록 한다. <br>
+```{r}
+# barplot of data_movie4
+ggplot(data_movie4,aes(x=score,y=count,fill=score)) +
+  geom_bar(stat="identity") +
+  xlab("평점") + ylab("빈도수") +
+  ggtitle("영화 '기생충' 관련 평점 별 빈도수") +
+  theme(plot.title = element_text(color="black",size=20,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=15,face="bold"),
+        axis.title.y = element_text(color="blue",size=15,face="bold"),
+        axis.text.x = element_text(face="bold",color="orange",size=10,angle=45),
+        axis.text.y = element_text(face="bold",color="darkorchid",size=10,angle=45))
+```
+<br> 위의 그래프를 통해서 봤을 때 만점(10점)을 준 네티즌의 수가 압도적으로 많음을 알 수 있다. <br>
+
+그렇다면, 과연 일자별, 시간대별로 네티즌 평균평점이 차이가 있다고 할 수 있는지 통계분석을 실시해보도록 하겠다. 여기에서는 검증하고자 하는 요소가 일자별(date), 시간대별(hour) 이렇게 2가지이므로 일원배치법(one-way ANOVA test)과 이원배치법(two-way ANOVA test)을 적용한다. <br>
 
 
 #### 2) statistical analysis
@@ -291,6 +316,9 @@ qqnorm(naver_movie$score) ; qqline(naver_movie$score)
 <br> 그래프를 살펴본 결과, 산점도의 분포가 직선 주변에 고르게 분포되어 있지는 않아보인다. 또한, 일자별, 시간대별로 나누어서 그래프를 그린다고 하더라도 이와 비슷한 결과를 주지 않을까 생각한다. 따라서, 네티즌 평점은 정규성을 벗어난 것으로 결론을 내리고, 이에 따라 모집단의 분포와 무관한 순위(rank)와 부호(sign)를 사용하여 결과를 도출하는 비모수적 검정(nonparametric test)을 사용하도록 한다. 모수적 검정인 일원배치법과 이원배치법에 상응하는 비모수적 검정에는 각각 Kruskal-Wallis Test와 Friedman Test가 있다. 다만, Friedman Test의 경우는 변수, group, 그리고 block의 개수가 동일한 경우에 한해 검정이 가능하기 때문에 네티즌 평점 데이터에는 적용할 수 없으므로 생략한다. 그리고 추가적으로 정규성을 만족한다는 가정 하에 모수적 검정(parametric test)도 실시해보겠다. 순서는 다음과 같이 실시한다. 단, 유의수준은 0.05로 한다. <br>
 
 One-way ANOVA -> Kruskal_Wallis -> Two-way ANOVA <br> 
+
+추가적으로 모수적 검정과 비모수적 검정에 대한 간략한 개괄은 아래의 사이트에 나와있다. <br>
+site : https://keydifferences.com/difference-between-parametric-and-nonparametric-test.html <br>
 
 
 A -> 일자(date)별 효과 / B -> 시간대(hour)별 효과 <br>
